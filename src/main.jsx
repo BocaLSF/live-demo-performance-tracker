@@ -23,12 +23,15 @@ const EMPLOYEES = [
   { id: "amy", name: "Amy", role: "employee" },
 ];
 const ZONES = ["iPhone", "Mac", "iPad", "Apple Watch"];
+// Be forgiving if a dashboard environment variable was pasted as a Markdown link.
+const normalizeSupabaseUrl = (value = "") => {
+  const match = value.match(/https:\/\/[^\s)\]]+/)?.[0] || value;
+  return match.replace(/\/rest\/v1\/?$/, "").replace(/\/$/, "");
+};
+const supabaseUrl = normalizeSupabaseUrl(import.meta.env.VITE_SUPABASE_URL);
 const supabase =
-  import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
-    ? createClient(
-        import.meta.env.VITE_SUPABASE_URL,
-        import.meta.env.VITE_SUPABASE_ANON_KEY,
-      )
+  supabaseUrl && import.meta.env.VITE_SUPABASE_ANON_KEY
+    ? createClient(supabaseUrl, import.meta.env.VITE_SUPABASE_ANON_KEY)
     : null;
 
 function seed() {
