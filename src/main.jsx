@@ -13,8 +13,10 @@ import {
   UsersThree,
   DownloadSimple,
   ArrowClockwise,
+  ArrowLeft,
 } from "@phosphor-icons/react";
 import "./styles.css";
+import "./overrides.css";
 
 const EMPLOYEES = [
   { id: "hansen", name: "Hansen", role: "admin" },
@@ -169,6 +171,10 @@ function App() {
             saving={saving}
             status={status}
             reset={reset}
+            onSwitch={() => {
+              localStorage.removeItem("ld_employee");
+              setEmployee("");
+            }}
           />
         ) : (
           <Dashboard records={records} current={current} isAdmin={isAdmin} />
@@ -258,6 +264,7 @@ function Record({
   saving,
   status,
   reset,
+  onSwitch,
 }) {
   return (
     <div className="record-page">
@@ -266,13 +273,12 @@ function Record({
           <div className="eyebrow">READY TO LOG</div>
           <h2>Hi, {current.name}</h2>
         </div>
-        <span className="today">
-          {new Intl.DateTimeFormat("en", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          }).format(new Date())}
-        </span>
+        <div className="greeting-actions">
+          <button className="back-user" onClick={onSwitch}>
+            <ArrowLeft size={15} /> 切换姓名
+          </button>
+          <span className="today">{new Intl.DateTimeFormat("en", { weekday: "short", month: "short", day: "numeric" }).format(new Date())}</span>
+        </div>
       </div>
       <section className="panel">
         <label className="section-label">你在哪个 Zoning</label>
